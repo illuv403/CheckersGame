@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class CheckersGUI extends JFrame {
     private static final int BOARD_SIZE = 8;
@@ -32,10 +33,35 @@ public class CheckersGUI extends JFrame {
                 cells[row][col].setPreferredSize(new Dimension(80, 80));
                 cells[row][col].setBackground((row + col) % 2 == 0 ? Color.WHITE : Color.BLACK);
 
+                if (row < 3 && (row + col) % 2 == 1) {
+                    cells[row][col].setIcon(createFigure(Color.BLACK, false));
+                } else if (row > 4 && (row + col) % 2 == 1) {
+                    cells[row][col].setIcon(createFigure(Color.WHITE, true));
+                } else {
+                    cells[row][col].setIcon(null);
+                }
+
                 boardPanel.add(cells[row][col]);
             }
         }
         setLocationRelativeTo(null);
+    }
+
+
+    private Icon createFigure(Color color, boolean withOutline) {
+        BufferedImage figure = new BufferedImage(80, 80, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = figure.createGraphics();
+        if (withOutline) {
+            g.setColor(Color.BLACK);
+            g.fillOval(5, 5, 70, 70);
+        } else {
+            g.setColor(Color.WHITE);
+            g.fillOval(5, 5, 70, 70);
+        }
+        g.setColor(color);
+        g.fillOval(10, 10, 60, 60);
+        g.dispose();
+        return new ImageIcon(figure);
     }
 
 }
